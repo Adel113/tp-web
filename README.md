@@ -10,7 +10,7 @@ Fonctionnalités
 - Affichage du profil (`nom`, `prenom`, `email`) stocké dans Realtime Database
 
 Structure du projet
-- `pages/` : fichiers HTML (ouvrir `pages/index.html`)
+-  fichiers HTML (ouvrir index.html`)
 - `src/` : scripts JavaScript (login, signup, account)
 - `assets/css/` : fichiers CSS
 - `config/` : `firebase-config.js` généré à partir de `.env` (NE PAS committer)
@@ -44,7 +44,7 @@ node scripts/generate-config.js --check
 ```
 
 Lancer le projet
-- Option recommandée : servez le dossier avec un serveur statique et ouvrez `pages/index.html` :
+- Option recommandée : un serveur statique et ouvrez `pages/index.html` :
 
 ```bash
 # Python 3

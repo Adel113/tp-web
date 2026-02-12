@@ -23,27 +23,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
     try {
       const userCredential = await firebase.auth().signInWithEmailAndPassword(email, motdepasse);
+      // rediriger vers la page compte (le message de vérification est géré sur account)
       const user = userCredential.user;
-      try { await user.reload(); } catch (e) { /* ignore reload errors */ }
-      if (!user.emailVerified) {
-        messageDiv.textContent = 'Veuillez vérifier votre adresse email avant de vous connecter. <button id="resend">Renvoyer le mail</button>';
-        messageDiv.className = 'message error';
-        // handler resend
-        setTimeout(() => {
-          const btn = document.getElementById('resend');
-          if (btn) btn.addEventListener('click', async () => {
-            try {
-              await user.sendEmailVerification();
-              messageDiv.textContent = 'Email de vérification renvoyé.';
-              messageDiv.className = 'message success';
-            } catch (e) {
-              console.error(e);
-              messageDiv.textContent = 'Impossible de renvoyer l\'email.';
-            }
-          });
-        }, 50);
-        return;
-      }
       window.location.href = 'account.html';
     } catch (err) {
       console.error(err);

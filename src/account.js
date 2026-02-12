@@ -15,12 +15,22 @@ window.addEventListener('DOMContentLoaded', () => {
   firebase.auth().onAuthStateChanged(async (user) => {
     if (user) {
       try { await user.reload(); } catch (e) { /* ignore reload errors */ }
+      // récupérer le profil depuis Realtime DB (affiché quelle que soit la vérif)
+      try {
+        const snapshot = await firebase.database().ref('utilisateurs/' + user.uid).once('value');
+        const profile = snapshot.val() || {};
+        nomEl.textContent = profile.nom || '-';
+        prenomEl.textContent = profile.prenom || '-';
+        emailEl.textContent = user.email || '-';
+      } catch (err) {
+        console.error(err);
+        messageDiv.textContent = 'Impossible de récupérer le profil.';
+      }
+
+      // Indiquer si l'adresse n'est pas vérifiée (mais laisser le profil visible)
       if (!user.emailVerified) {
         messageDiv.innerHTML = 'Adresse non vérifiée. Vérifiez votre boîte mail. <button id="resend">Renvoyer l\'email</button>';
         messageDiv.className = 'message error';
-        document.getElementById('nom').textContent = '-';
-        document.getElementById('prenom').textContent = '-';
-        document.getElementById('email').textContent = user.email || '-';
         setTimeout(() => {
           const btn = document.getElementById('resend');
           if (btn) btn.addEventListener('click', async () => {
@@ -34,18 +44,6 @@ window.addEventListener('DOMContentLoaded', () => {
             }
           });
         }, 50);
-        return;
-      }
-      // récupérer le profil depuis Realtime DB
-      try {
-        const snapshot = await firebase.database().ref('utilisateurs/' + user.uid).once('value');
-        const profile = snapshot.val() || {};
-        nomEl.textContent = profile.nom || '-';
-        prenomEl.textContent = profile.prenom || '-';
-        emailEl.textContent = user.email || '-';
-      } catch (err) {
-        console.error(err);
-        messageDiv.textContent = 'Impossible de récupérer le profil.';
       }
     } else {
       // Rediriger si non authentifié
