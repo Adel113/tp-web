@@ -1,0 +1,12 @@
+{
+  "rules": {
+    "utilisateurs": {
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        ".write": "$uid === auth.uid",
+        ".validate": "newData.hasChildren(['nom', 'prenom', 'email']) && newData.child('nom').isString() && newData.child('prenom').isString() && newData.child('email').isString() && newData.child('email').matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$/)"
+      },
+      ".indexOn": ["email"]
+    }
+  }
+}

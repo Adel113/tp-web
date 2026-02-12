@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mon compte</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <div class="brand" aria-hidden="false">
+      <img src="logo.png" alt="Logo" class="brand-img">
+    </div>
+    <h1>Mon compte</h1>
+    <div id="profile">
+      <p><strong>Nom :</strong> <span id="nom">-</span></p>
+      <p><strong>Prénom :</strong> <span id="prenom">-</span></p>
+      <p><strong>Email :</strong> <span id="email">-</span></p>
+    </div>
+    <div class="actions">
+      <button id="logout">Se déconnecter</button>
+      <a class="btn" href="index.html">Accueil</a>
+    </div>
+    <div id="message" class="message error"></div>
+  </div>
+
+  <!-- Firebase (CDN - compat libraries) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+  <script src="firebase-config.js"></script>
+  <script src="account.js"></script>
+</body>
+</html>

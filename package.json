@@ -1,0 +1,12 @@
+{
+  "name": "tp-web",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build-config": "node scripts/generate-config.js",
+    "check-config": "node scripts/generate-config.js --check"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.0"
+  }
+}
