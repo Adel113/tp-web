@@ -2,7 +2,8 @@ const fs = require('fs');
 const path = require('path');
 
 const envPath = path.join(__dirname, '..', '.env');
-const configPath = path.join(__dirname, '..', 'firebase-config.js');
+const configDir = path.join(__dirname, '..', 'config');
+const configPath = path.join(configDir, 'firebase-config.js');
 
 function loadEnv() {
   if (!fs.existsSync(envPath)) {
@@ -32,14 +33,14 @@ function generateConfig(env) {
 
   // Config Firebase
   const firebaseConfig = {
-    apiKey: "${env.REACT_APP_FIREBASE_API_KEY}",
-    authDomain: "${env.REACT_APP_FIREBASE_AUTH_DOMAIN}",
-    projectId: "${env.REACT_APP_FIREBASE_PROJECT_ID}",
-    storageBucket: "${env.REACT_APP_FIREBASE_STORAGE_BUCKET}",
-    messagingSenderId: "${env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID}",
-    appId: "${env.REACT_APP_FIREBASE_APP_ID}",
-    measurementId: "${env.REACT_APP_FIREBASE_MEASUREMENT_ID}",
-    databaseURL: "${env.REACT_APP_FIREBASE_DATABASE_URL}"
+    apiKey: "${env.FIREBASE_API_KEY || env.REACT_APP_FIREBASE_API_KEY || ''}",
+    authDomain: "${env.FIREBASE_AUTH_DOMAIN || env.REACT_APP_FIREBASE_AUTH_DOMAIN || ''}",
+    projectId: "${env.FIREBASE_PROJECT_ID || env.REACT_APP_FIREBASE_PROJECT_ID || ''}",
+    storageBucket: "${env.FIREBASE_STORAGE_BUCKET || env.REACT_APP_FIREBASE_STORAGE_BUCKET || ''}",
+    messagingSenderId: "${env.FIREBASE_MESSAGING_SENDER_ID || env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID || ''}",
+    appId: "${env.FIREBASE_APP_ID || env.REACT_APP_FIREBASE_APP_ID || ''}",
+    measurementId: "${env.FIREBASE_MEASUREMENT_ID || env.REACT_APP_FIREBASE_MEASUREMENT_ID || ''}",
+    databaseURL: "${env.FIREBASE_DATABASE_URL || env.REACT_APP_FIREBASE_DATABASE_URL || ''}"
   };
 
   // Initialiser Firebase seulement si pas déjà fait
@@ -76,6 +77,7 @@ if (process.argv[2] === '--check') {
 } else {
   const env = loadEnv();
   const config = generateConfig(env);
+  if (!fs.existsSync(configDir)) fs.mkdirSync(configDir, { recursive: true });
   fs.writeFileSync(configPath, config, 'utf8');
-  console.log('firebase-config.js généré avec succès.');
+  console.log('config/firebase-config.js généré avec succès.');
 }

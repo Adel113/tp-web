@@ -1,3 +1,4 @@
+
 # TP Web — Auth & Profil (Firebase)
 
 Petit prototype front-end pour l'inscription, la connexion et la gestion d'un compte utilisateur.
@@ -7,6 +8,12 @@ Fonctionnalités
 - Envoi d'un email de vérification
 - Connexion
 - Affichage du profil (`nom`, `prenom`, `email`) stocké dans Realtime Database
+
+Structure du projet
+- `pages/` : fichiers HTML (ouvrir `pages/index.html`)
+- `src/` : scripts JavaScript (login, signup, account)
+- `assets/css/` : fichiers CSS
+- `config/` : `firebase-config.js` généré à partir de `.env` (NE PAS committer)
 
 Prérequis
 - Node.js et npm
@@ -18,27 +25,26 @@ npm install
 ```
 
 Configuration
-1. Créez un fichier `.env` à la racine avec les variables : 
+1. Créez un fichier `.env` à la racine.  :
 
 ```
-Envoyées par mail 
+Envoyées par mail
 ```
 
-2. Générez le fichier client `firebase-config.js` utilisé par les pages :
+2. Générez le fichier client `config/firebase-config.js` utilisé par les pages :
 
 ```bash
 npm run build-config
 ```
 
-Ligne de commande pour vérifier sans écrire :
+Vérifier sans écrire :
 
 ```bash
 node scripts/generate-config.js --check
 ```
 
 Lancer le projet
-- Option simple (ouvrir en local) : double-cliquez sur `index.html` dans le dossier.
-- Option recommandée (serveur statique pour éviter des problèmes de CORS/paths) :
+- Option recommandée : servez le dossier avec un serveur statique et ouvrez `pages/index.html` :
 
 ```bash
 # Python 3
@@ -48,5 +54,5 @@ python -m http.server 8000
 npx serve .
 ```
 
-Ouvrez ensuite `http://localhost:8000`.
+Ouvrez `http://localhost:8000/pages/`.
 

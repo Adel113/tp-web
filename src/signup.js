@@ -3,7 +3,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('signup-form');
   const messageDiv = document.getElementById('message');
 
-  if (typeof firebase === 'undefined' || !(firebase.apps && firebase.apps.length >= 0)) {
+  if (typeof firebase === 'undefined' || !(firebase.apps && firebase.apps.length > 0)) {
     messageDiv.textContent = "Configuration Firebase manquante. Exécutez 'npm run build-config' et rechargez la page.";
     messageDiv.className = 'message error';
     return;
