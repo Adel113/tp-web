@@ -21,7 +21,7 @@ Configuration
 1. Créez un fichier `.env` à la racine avec les variables : 
 
 ```
-Envoyé par mail 
+Envoyées par mail 
 ```
 
 2. Générez le fichier client `firebase-config.js` utilisé par les pages :
