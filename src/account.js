@@ -15,7 +15,8 @@ window.addEventListener('DOMContentLoaded', () => {
   firebase.auth().onAuthStateChanged(async (user) => {
     if (user) {
       try { await user.reload(); } catch (e) { /* ignore reload errors */ }
-      // récupérer le profil depuis Realtime DB (affiché quelle que soit la vérif)
+
+      // récupérer le profil depuis Realtime DB
       try {
         const snapshot = await firebase.database().ref('utilisateurs/' + user.uid).once('value');
         const profile = snapshot.val() || {};
@@ -23,27 +24,8 @@ window.addEventListener('DOMContentLoaded', () => {
         prenomEl.textContent = profile.prenom || '-';
         emailEl.textContent = user.email || '-';
       } catch (err) {
-        console.error(err);
+        window.__SEC__ && window.__SEC__.logger.error && window.__SEC__.logger.error(err);
         messageDiv.textContent = 'Impossible de récupérer le profil.';
-      }
-
-      // Indiquer si l'adresse n'est pas vérifiée (mais laisser le profil visible)
-      if (!user.emailVerified) {
-        messageDiv.innerHTML = 'Adresse non vérifiée. Vérifiez votre boîte mail. <button id="resend">Renvoyer l\'email</button>';
-        messageDiv.className = 'message error';
-        setTimeout(() => {
-          const btn = document.getElementById('resend');
-          if (btn) btn.addEventListener('click', async () => {
-            try {
-              await user.sendEmailVerification();
-              messageDiv.textContent = 'Email de vérification renvoyé.';
-              messageDiv.className = 'message success';
-            } catch (e) {
-              console.error(e);
-              messageDiv.textContent = 'Impossible de renvoyer l\'email.';
-            }
-          });
-        }, 50);
       }
     } else {
       // Rediriger si non authentifié
@@ -56,7 +38,7 @@ window.addEventListener('DOMContentLoaded', () => {
       await firebase.auth().signOut();
       window.location.href = 'index.html';
     } catch (err) {
-      console.error(err);
+      window.__SEC__ && window.__SEC__.logger.error && window.__SEC__.logger.error(err);
       messageDiv.textContent = 'Erreur lors de la déconnexion.';
     }
   });

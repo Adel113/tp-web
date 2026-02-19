@@ -2,11 +2,35 @@
 window.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('login-form');
   const messageDiv = document.getElementById('message');
+  const submitBtn = form.querySelector('button[type="submit"]');
 
   if (typeof firebase === 'undefined' || !(firebase.apps && firebase.apps.length > 0)) {
     messageDiv.textContent = "Configuration Firebase manquante. Exécutez 'npm run build-config' et rechargez la page.";
     messageDiv.className = 'message error';
     return;
+  }
+
+  const S = window.__SEC__;
+
+  function setGenericAuthError(){
+    messageDiv.textContent = 'Identifiants invalides ou compte non activé.';
+    messageDiv.className = 'message error';
+  }
+
+  async function handleLockout(email){
+    const key = email || 'global';
+    const info = S.getAttemptInfo(key);
+    if (info.nextAllowed && Date.now() < info.nextAllowed){
+      const remaining = Math.ceil((info.nextAllowed - Date.now())/1000);
+      submitBtn.disabled = true;
+      messageDiv.textContent = `Trop de tentatives. Réessayez dans ${remaining}s.`;
+      setTimeout(() => {
+        submitBtn.disabled = false;
+        messageDiv.textContent = '';
+      }, remaining * 1000 + 200);
+      return true;
+    }
+    return false;
   }
 
   form.addEventListener('submit', async (e) => {
@@ -21,14 +45,30 @@ window.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    if (!S.validateEmail(email)){
+      messageDiv.textContent = 'Email invalide.';
+      return;
+    }
+
+    if (await handleLockout(email)) return;
+
     try {
       const userCredential = await firebase.auth().signInWithEmailAndPassword(email, motdepasse);
-      // rediriger vers la page compte (le message de vérification est géré sur account)
       const user = userCredential.user;
+      // successful login -> reset attempts for this key
+      S.resetAttempts(email);
       window.location.href = 'account.html';
     } catch (err) {
-      console.error(err);
-      messageDiv.textContent = err.message || 'Erreur lors de la connexion.';
+      S.logger.error(err);
+      S.recordFailedAttempt(email);
+      setGenericAuthError();
+      const info = S.getAttemptInfo(email);
+      if (info.count >= 5){
+        const remaining = Math.ceil((info.nextAllowed - Date.now())/1000);
+        submitBtn.disabled = true;
+        messageDiv.textContent = `Trop de tentatives. Réessayez dans ${remaining}s.`;
+        setTimeout(() => { submitBtn.disabled = false; messageDiv.textContent = ''; }, remaining * 1000 + 200);
+      }
     }
   });
 });

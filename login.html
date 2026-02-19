@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Connexion</title>
   <link rel="stylesheet" href="../assets/css/styles.css">
-  <style>.message{margin-top:10px}</style>
+  <!-- Content Security Policy: restrict sources and disallow inline scripts/styles -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://www.gstatic.com https://*.firebaseio.com; script-src-elem 'self' https://www.gstatic.com https://*.firebaseio.com; connect-src 'self' https:; img-src 'self' data:; style-src 'self'; font-src 'self';">
 </head>
 <body>
   <div class="container">
@@ -15,10 +16,10 @@
     <h1>Connexion</h1>
     <form id="login-form">
       <label for="email">Email :</label>
-      <input type="email" id="email" name="email" required>
+      <input type="email" id="email" name="email" required maxlength="254">
 
       <label for="motdepasse">Mot de passe :</label>
-      <input type="password" id="motdepasse" name="motdepasse" required>
+      <input type="password" id="motdepasse" name="motdepasse" required minlength="8" maxlength="128">
 
       <button type="submit">Se connecter</button>
     </form>
@@ -31,6 +32,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
   <script src="../config/firebase-config.js"></script>
+  <script src="../src/security.js"></script>
   <script src="../src/login.js"></script>
 </body>
 </html>
